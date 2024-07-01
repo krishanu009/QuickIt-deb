@@ -1,0 +1,32 @@
+.menu{
+    width: 200px;
+    height: 220px;
+    background-color: white;
+    position: absolute;
+    left: 290px;
+    top:460px;
+    text-align: justify;
+    padding: 20px;
+    
+}
+.filterMenu
+{
+    width: 600px;
+    height: 400px;
+    background-color: white;
+    position: fixed;
+    left: 530px;
+    top:150px;
+}
+.filterMenuBg
+{
+    /* position: fixed;
+    z-index: 10;
+    background-color: blue;
+    position: fixed;
+    width: 100%;
+    height: 100%; */
+    /* left: 530px;
+    top:150px; */
+
+}
