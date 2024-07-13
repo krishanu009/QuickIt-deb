@@ -16,7 +16,7 @@ const resturantScehma = mongoose.Schema({
         type:String,
         required:[true,"PLease add the address"]
     },
-    timing:[{open:String,close:String}],
+    timing:[{day:String,open:String,close:String}],
     days:[],
     menuId:String,
     phone:String,

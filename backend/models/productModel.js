@@ -20,6 +20,10 @@ const productSchema = mongoose.Schema({
         type:String,
         required:[true,"Please add the resturantId"]
     },
+    sellerId:{
+        type:String,
+        required:[true,"Please add the sellerId"]
+    },
     tags:[]
    
     
