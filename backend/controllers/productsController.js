@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/productModel");
 const Resturant = require("../models/resturantModels");
-
+const imageHelper = require("../helper functions/imageUpload");
 //@desc Get all products by resturant id
 //@route GET /api/prducts/:resturantId
 //@access public
@@ -51,9 +51,19 @@ const newProduct = asyncHandler(async (req, res) => {
       throw new Error("Resturant does not exit or belong to this seller!");
     }
 
+
+    let imageURL = await imageHelper.uploadImage(image);
+
+    if (!imageURL) {
+      res.status(400);
+      throw new Error("Image Upload failed!");
+    }
+
+    console.log("imageURL",imageURL);
+
     const product = await Product.create({
       name,
-      image,
+      image:imageURL,
       price,
       sellingPrice,
       resturantId,
@@ -71,6 +81,9 @@ const newProduct = asyncHandler(async (req, res) => {
     console.log("error", e);
   }
 });
+
+
+
 
 
 

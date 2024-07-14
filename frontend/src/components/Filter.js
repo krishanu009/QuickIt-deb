@@ -1,15 +1,15 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import "../styles/Filter.css";
 
-function Filter() {
-  const filtersCount = 2;
+function Filter({displayFilters, setDisplayFilters}) {
+
   const [sortBy, setSortBy] = useState({ text: "Sort by" });
   const [radioSelected, setRadioSelected] = useState("relevance");
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [tempSelectedFilters, setTempSelectedFilters] = useState([]);
-  const [displayFilters, setDisplayFilters] = useState([]);
+  // const [displayFilters, setDisplayFilters] = useState([]);
   const [availableFilters, setAvailableFilters] = useState([]);
   const [filterMenues, setFilterMenues] = useState([
     {
@@ -233,7 +233,7 @@ function Filter() {
   }
   const handleApplyFilters = () => {
     setSelectedFilters(tempSelectedFilters);
-    
+    console.log("applied filters",tempSelectedFilters);
     setShowFilterMenu(false);
   };
 
@@ -405,7 +405,7 @@ function Filter() {
           {showSortMenu && (
             <div
               ref={sortMenuRef}
-              className="menu rounded-2xl shadow-lg border-2 border-solid p-4"
+              className="menu rounded-2xl shadow-lg border-2 border-solid p-4 z-30"
             >
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">

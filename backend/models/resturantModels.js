@@ -18,6 +18,8 @@ const resturantScehma = mongoose.Schema({
     },
     timing:[{day:String,open:String,close:String}],
     days:[],
+    tags:[],
+    offer:String,
     menuId:String,
     phone:String,
     image:String

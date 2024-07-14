@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 
 const Resturant = require("../models/resturantModels");
 const Seller = require("../models/sellerModel");
+const imageHelper = require("../helper functions/imageUpload");
 
 //@desc get resturant
 //@route GET /api/resturant
@@ -12,6 +13,18 @@ let resturant = await Resturant.find();
 res.status(200).json(resturant);
 });
 
+//@desc get resturant
+//@route GET /api/resturant/:ocation
+//@access public
+
+const getResturantByLocation = asyncHandler(async (req,res) => {
+
+  let {location} = req.params;
+  let resturants = await Resturant.find({location});
+
+  res.status(200).json(resturants);
+  });
+
 
 
 
@@ -21,7 +34,7 @@ res.status(200).json(resturant);
 //@access public
 
 const newResturant = asyncHandler(async (req, res) => {
-  let { name, location, sellerId, address, timing, menuId, phone, image } =
+  let { name, location, sellerId, address, timing, menuId, phone, image, offer } =
     req.body;
    let id = req.user.id;
 
@@ -44,14 +57,25 @@ const newResturant = asyncHandler(async (req, res) => {
         res.status(400).json("Seller does not exist!");
         throw new Error("Error in creating new resturant");
     }
+
+
+    let imageURL = await imageHelper.uploadImage(image);
+
+    if (!imageURL) {
+      res.status(400);
+      throw new Error("Image Upload failed!");
+    }
+
+
     
     var resturant = await Resturant.create({
       name,
       location,
       address,
       timing,
-      image,
-      sellerId:id
+      image:imageURL,
+      sellerId:id,
+      offer
 
     });
 
@@ -70,4 +94,31 @@ const newResturant = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = {allResturant,newResturant};
+//@desc update resturant
+//@route POST /api/resturant/:id
+//@access public
+const updateResturant = asyncHandler(async (req,res) => {
+if(!req.params.id)
+{
+  res.status(400);
+    throw new Error("Error in updating resturant");
+}
+
+  const updatedResturant = await Resturant.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+
+  if(updatedResturant)
+  {
+     res.status(200).json(updatedResturant);
+  }
+  else
+  {
+    res.status(400);
+    throw new Error("Error in updating resturant");
+  }
+
+ 
+});
+
+module.exports = {allResturant,newResturant,getResturantByLocation,updateResturant};

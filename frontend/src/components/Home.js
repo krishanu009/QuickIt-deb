@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Carousel from './Carousel'
 import biriyani from '../assets/biriyani.avif';
 import burger from '../assets/burger.jpg'
@@ -12,7 +12,7 @@ import shawrma from '../assets/shawrma.jpg'
 import south from '../assets/south.jpg'
 import Filter from './Filter';
 import Product from './Product';
-
+import axios from 'axios';
 function Home() {
 
   const products = [
@@ -27,6 +27,45 @@ function Home() {
     { id: 9, name: 'Product 9', image: shawrma },
     { id: 10, name: 'Product 10', image: south },
   ];
+  
+  const [allProduct,setAllProduct] = useState([]);
+  const [displayProduct,setDisplayProduct] = useState([]);
+  const [displayFilters, setDisplayFilters] = useState([]);
+  useEffect(() => {
+    getProduct();
+  },[]);
+
+  useEffect(() => {
+    applyFilter();
+  },[allProduct,displayFilters]);
+
+
+  const applyFilter = () => {
+    if(!displayFilters.length)
+    {
+      setDisplayProduct(allProduct);
+      return;
+    }
+    const filterTagValues = displayFilters.map(tag => tag.value);
+    console.log("filterTagValues",filterTagValues);
+    const filteredProducts = allProduct.filter(item => 
+      item.tags.some(tag => filterTagValues.includes(tag))
+    );
+
+    setDisplayProduct(filteredProducts);
+
+
+  }
+
+
+  const getProduct = async () => {
+     await axios.get(process.env.REACT_APP_GET_RESTURANT + "/banglore").then((res)=>{
+      console.log("res",res);
+      setAllProduct(res.data);
+     }).catch((e)=>{
+      console.log("err",e);
+     })
+  }
   return (
     <div className='pl-[10%] pr-[100px] pt-[20px] h-[1000px]'>
         {/* <h1 className="text-3xl font-bold underline">
@@ -36,10 +75,14 @@ function Home() {
     <Carousel products={products}></Carousel>
     <hr className='mt-[50px]'></hr>
     <h1 className='font-bold text-[25px] pl-[50px] mt-[30px]'>Restaurants with online food delivery in Bangalore</h1>
-    <Filter></Filter>
+    <Filter displayFilters={displayFilters} setDisplayFilters={setDisplayFilters}></Filter>
     <div className='flex'>
-    <Product></Product>
-    <Product></Product>
+
+      {displayProduct.map((item) =>(
+        <Product product={item}></Product>
+      ))}
+    
+    
     </div>
     
 
