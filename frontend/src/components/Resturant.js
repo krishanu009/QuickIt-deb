@@ -6,45 +6,49 @@ import nonVeg from "../assets/non-veg.png";
 import "../styles/Resturant.css";
 import deliveryIcon from "../assets/delivery.jpg";
 function Resturant() {
-  const [resturant, setResturant] = useState(
-    {
-      rating: {
-        count: "5362",
-        value: "4.3",
+  const [resturant, setResturant] = useState({
+    rating: {
+      count: "5362",
+      value: "4.3",
+    },
+    _id: "6692e0a72e16349fc16f3664",
+    name: "KFC",
+    location: "banglore",
+    sellerId: "668a7dc4960c1892de11f5fb",
+    address: "banglore",
+    timing: [
+      {
+        day: "1",
+        open: "9:00",
+        close: "21:00",
+        _id: "6692e0a72e16349fc16f3665",
       },
-      _id: "6692e0a72e16349fc16f3664",
-      name: "KFC",
-      location: "banglore",
-      sellerId: "668a7dc4960c1892de11f5fb",
-      address: "banglore",
-      timing: [
-        {
-          day: "1",
-          open: "9:00",
-          close: "21:00",
-          _id: "6692e0a72e16349fc16f3665",
-        },
-      ],
-      days: [],
-      image: "https://iili.io/dKtTX5X.jpg",
-      __v: 0,
-      offer: "Items at ₹199",
-      tags: ["burger", "rolls"],
-      maxPrice: "800",
-      minPrice: "108",
-    }
-   
-  );
-const [allDish,setAllDish] = useState([]);
-const [filteredDish,setFilteredDish] = useState([]);
-  useEffect(()=>{
+    ],
+    days: [],
+    image: "https://iili.io/dKtTX5X.jpg",
+    __v: 0,
+    offer: "Items at ₹199",
+    tags: ["burger", "rolls"],
+    maxPrice: "800",
+    minPrice: "108",
+  });
+  const [allDish, setAllDish] = useState([]);
+  const [filteredDish, setFilteredDish] = useState([]);
+  const [checked, setChecked] = useState(null);
+  const [veg, setVeg] = useState(false);
+  const [nonVeg, setnonVeg] = useState(false);
+  useEffect(() => {
     getDishes();
-  },[resturant])
+    filterDish();
+  }, [resturant]);
+
+  useEffect(() => {
+    filterDish();
+  }, [veg, nonVeg]);
 
   const getDishes = async () => {
-
     await axios
-      .get(process.env.REACT_APP_GET_PRODUCT + "/"+resturant._id)
+      .get(process.env.REACT_APP_GET_PRODUCT + "/" + resturant._id)
       .then((res) => {
         console.log("res", res);
         setAllDish(res.data);
@@ -53,10 +57,44 @@ const [filteredDish,setFilteredDish] = useState([]);
       .catch((e) => {
         console.log("err", e);
       });
+  };
+  const filterDish = () => {
+    let tempFilteredDishes = [...allDish];
+    console.log("veg", veg);
+    console.log("nonveg", nonVeg);
+    if (!nonVeg && !veg) {
+    
+      tempFilteredDishes = allDish;
+    } else if (veg) {
 
-  }
+      tempFilteredDishes = tempFilteredDishes.filter(
+        (item) => item.veg === true
+      );
+    } else if (nonVeg) {
+ 
+      tempFilteredDishes = tempFilteredDishes.filter(
+        (item) => item.veg === false
+      );
+    }
+    setFilteredDish(tempFilteredDishes);
+  };
+  const handleToggle = (type, e) => {
+    // setChecked(checked === id ? null : id);
+    if (type === "veg") {
+      setVeg(e.target.checked);
+      if (e.target.checked) setnonVeg(!e.target.checked);
+    } else {
+      setnonVeg(e.target.checked);
+      if (e.target.checked) setVeg(!e.target.checked);
+    }
+    console.log("switch", type);
+    console.log("e", e.target.checked);
+  };
 
-  const formattedCount = parseFloat(resturant.rating.count) >= 1000 ? (parseFloat(resturant.rating.count) / 1000).toFixed(1) + 'K' : parseFloat(resturant.rating.count);
+  const formattedCount =
+    parseFloat(resturant.rating.count) >= 1000
+      ? (parseFloat(resturant.rating.count) / 1000).toFixed(1) + "K"
+      : parseFloat(resturant.rating.count);
   return (
     <div className="pl-[25%] pr-[25%] pt-[20px] h-full ">
       <div className="font-bold p-8 text-[30px]">{resturant.name}</div>
@@ -77,14 +115,18 @@ const [filteredDish,setFilteredDish] = useState([]);
             </svg>
           </div>
           <div className="text-[rgb(65,68,73)] font-bold text-black">
-            {resturant.rating.value > 0 && ( <div className="inline-block"> {resturant.rating.value} | ({formattedCount} ratings) | </div>)}  {resturant.offer}
+            {resturant.rating.value > 0 && (
+              <div className="inline-block">
+                {" "}
+                {resturant.rating.value} | ({formattedCount} ratings) |{" "}
+              </div>
+            )}{" "}
+            {resturant.offer}
           </div>
         </div>
 
         <div className="text-customHoverColor p-2 font-semibold cursor-pointer">
-        {
-              resturant.tags.join(', ')
-            }
+          {resturant.tags.join(", ")}
         </div>
 
         <div className="flex pt-2">
@@ -104,7 +146,6 @@ const [filteredDish,setFilteredDish] = useState([]);
         </div>
         <hr class="border-t-[1px] border-gray-300 mt-[10px] p-1"></hr>
         <div className="text-grey-700  flex">
-          
           <img className="deliveryIcons" src={deliveryIcon} alt="delivery" />
           <div className="ml-[5px] text-[13px] text-gray-500 font-semibold">
             4.2 kms | ₹59 Delivery fee will apply
@@ -113,37 +154,55 @@ const [filteredDish,setFilteredDish] = useState([]);
       </div>
 
       <div className="w-full mt-[50px]">
-
-      {/* <label class="inline-flex items-center cursor-pointer">
+        {/* <label class="inline-flex items-center cursor-pointer">
   <input type="checkbox" value="" class="sr-only peer"></input>
   <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
   
   </div>
   <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle me</span>
 </label> */}
-<label class="relative inline-block w-16 h-8 mr-4">
-        <input type="checkbox" class="toggle-input opacity-0 w-0 h-0"></input>
-        <div class="toggle-switch absolute inset-0 bg-gray-300 rounded-full cursor-pointer transition duration-200">
-            <div class="toggle-circle-nonveg absolute top-1 left-1 w-6 h-6 bg-white  shadow-md transition transform duration-200"></div>
-        </div>
-    </label>
 
-    <label class="relative inline-block w-16 h-8">
-        <input type="checkbox" class="toggle-input opacity-0 w-0 h-0"></input>
-        <div class="toggle-switch absolute inset-0 bg-gray-300 rounded-full cursor-pointer transition duration-200">
-            <div class="toggle-circle-veg absolute top-1 left-1 w-6 h-6 bg-white  shadow-md transition transform duration-200"></div>
+        <div className="rounded-2xl inline-block border pt-4 pl-2">
+          <label class="relative inline-block w-16 h-8 mr-4">
+            <input
+              type="checkbox"
+              class="toggle-input opacity-0 w-0 h-0"
+              checked={nonVeg}
+              onChange={(e) => handleToggle("nonveg", e)}
+            ></input>
+            <div
+              class={`h-[15px] toggle-switch absolute inset-0 bg-gray-300 rounded-full cursor-pointer transition duration-200  ${
+                nonVeg ? "bg-red-500" : "bg-gray-300"
+              }`}
+            >
+              <div class=" mt-[-8px] toggle-circle-nonveg absolute top-1 left-1 w-6 h-6 bg-white  shadow-md transition transform duration-200 border border-red-700 "></div>
+            </div>
+          </label>
         </div>
-    </label>
-{/* <img className="vegIcons" src={veg} alt="KFC" /> */}
 
+        <div className="rounded-2xl inline-block border pt-4 pl-2 pr-4 ml-4">
+          <label class="relative inline-block w-16 h-8">
+            <input
+              type="checkbox"
+              class="toggle-input opacity-0 w-0 h-0"
+              checked={veg}
+              onChange={(e) => handleToggle("veg", e)}
+            ></input>
+            <div
+              class={` h-[15px] toggle-switch absolute inset-0 bg-gray-300 rounded-full cursor-pointer transition duration-200 ${
+                veg ? "bg-green-500" : "bg-gray-300"
+              }`}
+            >
+              <div class=" mt-[-8px] toggle-circle-veg absolute top-1 left-1 w-6 h-6 bg-white  shadow-md transition transform duration-200 border-2 border-green-700"></div>
+            </div>
+          </label>
+        </div>
+        <hr class="border-t-[1px] border-gray-300 mt-8"></hr>
+        {/* <img className="vegIcons" src={veg} alt="KFC" /> */}
       </div>
-      {
-       filteredDish.map(dish => (
-          <Dish dish={dish}></Dish>
-        ))
-      }
-      
-     
+      {filteredDish.map((dish) => (
+        <Dish dish={dish}></Dish>
+      ))}
     </div>
   );
 }
