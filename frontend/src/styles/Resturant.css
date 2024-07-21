@@ -1,0 +1,22 @@
+.deliveryIcons{
+    width:30px;  /* Set a fixed width */
+  height: 20px; /* Set a fixed height */
+ 
+}
+.toggle-input:checked + .toggle-switch .toggle-circle-nonveg {
+    transform: translateX(100%);
+}
+.toggle-input:checked + .toggle-switch .toggle-circle-veg {
+    transform: translateX(100%);
+}
+.toggle-circle-nonveg {
+    background-image: url('https://i.ibb.co/5sb6dzL/non-veg.png');
+    background-size: cover;
+}
+.toggle-circle-veg {
+    background-image: url('https://i.ibb.co/GPTP0JF/veg.png');
+    background-size: cover;
+}
+
+/* https://i.ibb.co/5sb6dzL/non-veg.png
+https://i.ibb.co/GPTP0JF/veg.png */

@@ -34,7 +34,7 @@ const getResturantByLocation = asyncHandler(async (req,res) => {
 //@access public
 
 const newResturant = asyncHandler(async (req, res) => {
-  let { name, location, sellerId, address, timing, menuId, phone, image, offer } =
+  let { name, location, sellerId, address, timing, menuId, phone, image, offer, tags ,minPrice, maxPrice } =
     req.body;
    let id = req.user.id;
 
@@ -75,7 +75,11 @@ const newResturant = asyncHandler(async (req, res) => {
       timing,
       image:imageURL,
       sellerId:id,
-      offer
+      offer,
+      tags,
+      minPrice:"199",
+      maxPrice:"700"
+
 
     });
 

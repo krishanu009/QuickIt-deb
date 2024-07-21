@@ -1,10 +1,10 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import "../styles/Filter.css";
 
-function Filter({displayFilters, setDisplayFilters}) {
+function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelected}) {
 
   const [sortBy, setSortBy] = useState({ text: "Sort by" });
-  const [radioSelected, setRadioSelected] = useState("relevance");
+ 
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);

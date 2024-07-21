@@ -28,9 +28,9 @@ const getProductByResturantId = asyncHandler(async (req, res) => {
 //@access public
 
 const newProduct = asyncHandler(async (req, res) => {
-  const { name, image, price, sellingPrice, resturantId, tags } = req.body;
+  const { name, image, price, sellingPrice, resturantId, tags, veg, description, quantity  } = req.body;
   console.log("req body", req.body);
-  if (!name || !image || !price || !sellingPrice || !resturantId) {
+  if (!name || !image || !price || !sellingPrice || !resturantId ||!veg || !description || !quantity ) {
     res.status(400);
     throw new Error("Please enter the mandatory fields!");
   }
@@ -69,6 +69,9 @@ const newProduct = asyncHandler(async (req, res) => {
       resturantId,
       tags,
       sellerId: id,
+      veg,
+      description,
+      quantity
     });
 
     if (product) {
@@ -82,9 +85,35 @@ const newProduct = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc Create new product
+//@route POST /api/product
+//@access public
+
+const updateProduct =  asyncHandler( async(req,res)=> {
+  if(!req.params.id)
+    {
+      res.status(400);
+        throw new Error("Error in updating product");
+    }
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+  
+    if(updatedProduct)
+    {
+       res.status(200).json(updatedProduct);
+    }
+    else
+    {
+      res.status(400);
+      throw new Error("Error in updating product");
+    }
+
+});
+
+  
 
 
 
 
-
-module.exports = { newProduct, getProductByResturantId };
+module.exports = { newProduct, getProductByResturantId,updateProduct};
