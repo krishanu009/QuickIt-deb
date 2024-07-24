@@ -1,42 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
 import axios from "axios";
 import Dish from "./Dish";
 import veg from "../assets/veg.png";
 import nonVeg from "../assets/non-veg.png";
 import "../styles/Resturant.css";
 import deliveryIcon from "../assets/delivery.jpg";
+import spoon from "../assets/spoon-loader.webm"
+import {CartContext} from '../context/CartContext'
 function Resturant() {
+  const { id } = useParams();
   const [resturant, setResturant] = useState({
-    rating: {
-      count: "5362",
-      value: "4.3",
+    "rating": {
+      "count": "1586",
+      "value": "4.3"
     },
-    _id: "6692e0a72e16349fc16f3664",
-    name: "KFC",
-    location: "banglore",
-    sellerId: "668a7dc4960c1892de11f5fb",
-    address: "banglore",
-    timing: [
+    "_id": "6694282655f25efab3999378",
+    "name": "Biriyani Spot",
+    "location": "banglore",
+    "sellerId": "668a7dc4960c1892de11f5fb",
+    "address": "banglore",
+    "timing": [
       {
-        day: "1",
-        open: "9:00",
-        close: "21:00",
-        _id: "6692e0a72e16349fc16f3665",
-      },
+        "day": "1",
+        "open": "9:00",
+        "close": "21:00",
+        "_id": "6694282655f25efab3999379"
+      }
     ],
-    days: [],
-    image: "https://iili.io/dKtTX5X.jpg",
-    __v: 0,
-    offer: "Items at ₹199",
-    tags: ["burger", "rolls"],
-    maxPrice: "800",
-    minPrice: "108",
+    "days": [],
+    "offer": "Items at ₹199",
+    "image": "https://i.ibb.co/rbVct82/1720985636146-adktghqnlzmsq6rcgg2msr.jpg",
+    "__v": 0,
+    "tags": [
+      "biriyani"
+    ],
+    "maxPrice": "600",
+    "minPrice": "299"
   });
   const [allDish, setAllDish] = useState([]);
   const [filteredDish, setFilteredDish] = useState([]);
   const [checked, setChecked] = useState(null);
   const [veg, setVeg] = useState(false);
   const [nonVeg, setnonVeg] = useState(false);
+ 
+
+
+  useEffect(()=>{
+    getResturantDetails();
+  },[]);
   useEffect(() => {
     getDishes();
     filterDish();
@@ -46,6 +58,17 @@ function Resturant() {
     filterDish();
   }, [veg, nonVeg]);
 
+  
+const getResturantDetails = async () => {
+  console.log("resturant  data");
+await axios.get(process.env.REACT_APP_GET_RESTURANT_BY_ID + "/" + id).then((res) => {
+  setResturant(res.data);
+  console.log("resturant  data",res.data);
+}).catch((e) => {
+  console.log("err",e);
+})
+
+};
   const getDishes = async () => {
     await axios
       .get(process.env.REACT_APP_GET_PRODUCT + "/" + resturant._id)
@@ -97,6 +120,7 @@ function Resturant() {
       : parseFloat(resturant.rating.count);
   return (
     <div className="pl-[25%] pr-[25%] pt-[20px] h-full ">
+
       <div className="font-bold p-8 text-[30px]">{resturant.name}</div>
       <div class="rounded-2xl w-full h-[200px] bg-white p-4 border border-gray-300 shadow-lg">
         <div className="mt-[1px] flex space-x-1 pt-2">
@@ -161,7 +185,7 @@ function Resturant() {
   </div>
   <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle me</span>
 </label> */}
-
+    
         <div className="rounded-2xl inline-block border pt-4 pl-2">
           <label class="relative inline-block w-16 h-8 mr-4">
             <input
@@ -201,7 +225,7 @@ function Resturant() {
         {/* <img className="vegIcons" src={veg} alt="KFC" /> */}
       </div>
       {filteredDish.map((dish) => (
-        <Dish dish={dish}></Dish>
+        <Dish dish={dish} ></Dish>
       ))}
     </div>
   );

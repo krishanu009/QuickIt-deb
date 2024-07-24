@@ -1,7 +1,14 @@
-import React from "react";
+import { React, useContext, useEffect } from "react";
 import "../styles/header.css";
-
+import { CartContext } from "../context/CartContext";
 function Header() {
+  const { cart, setCart } = useContext(CartContext);
+  useEffect(()=> {
+    let storedCart = localStorage.getItem('cart');
+     console.log("storedCart",JSON.parse(storedCart));
+    if(storedCart) setCart(JSON.parse(storedCart));
+  },[])
+ 
   return (
     <div className="main z-10 bg-white h-[80px] w-full sticky top-0 shadow flex">
       <div className="w-[30%] p-2 pl-20">Section 1 Content</div>
@@ -51,17 +58,24 @@ function Header() {
           </svg>
           &nbsp;&nbsp;Sign In
         </div>
-        <div className="ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket3" viewBox="0 0 16 16">
-  <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM3.394 15l-1.48-6h-.97l1.525 6.426a.75.75 0 0 0 .729.574h9.606a.75.75 0 0 0 .73-.574L15.056 9h-.972l-1.479 6z"/>
-</svg>
+        <div className="relative ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
+          {cart.length?(<div className="absolute right-[48px] w-[15px] h-[15px] bg-green-500 rounded-full ">
+            <div className="text-[10px] text-white ml-[4px]">{cart.length}</div>
+          </div>):null }
+          
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-basket3"
+            viewBox="0 0 16 16"
+          >
+            <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM3.394 15l-1.48-6h-.97l1.525 6.426a.75.75 0 0 0 .729.574h9.606a.75.75 0 0 0 .73-.574L15.056 9h-.972l-1.479 6z" />
+          </svg>
           &nbsp;&nbsp;Cart
         </div>
-
-
       </div>
-
-      
 
       {/* <div className="w-[20%] p-2">
         Section 3 Content

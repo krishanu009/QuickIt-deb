@@ -14,6 +14,27 @@ res.status(200).json(resturant);
 });
 
 //@desc get resturant
+//@route GET /api/resturant
+//@access public
+
+const getResturantById = asyncHandler(async (req,res) => {
+  console.log("here");
+  const { _id } = req.params;
+ 
+  if(!_id)
+  {
+    res.status(400);
+    throw new Error("please enter id");
+  }
+
+  console.log("id",_id);
+  let resturant = await Resturant.findOne({_id});
+  console.log("resturant",resturant);
+  res.status(200).json(resturant);
+  });
+  
+
+//@desc get resturant
 //@route GET /api/resturant/:ocation
 //@access public
 
@@ -125,4 +146,4 @@ if(!req.params.id)
  
 });
 
-module.exports = {allResturant,newResturant,getResturantByLocation,updateResturant};
+module.exports = {allResturant,newResturant,getResturantByLocation,updateResturant, getResturantById};

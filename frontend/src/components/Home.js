@@ -13,6 +13,7 @@ import south from "../assets/south.jpg";
 import Filter from "./Filter";
 import Product from "./Product";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 function Home() {
   const products = [
     { id: 1, name: "Product 1", image: biriyani },
@@ -117,7 +118,8 @@ function Home() {
       ></Filter>
       <div className="flex">
         {displayProduct.map((item) => (
-          <Product product={item}></Product>
+          <Link to={`/restaurant/${item._id}`}><Product product={item} > </Product></Link>
+          
         ))}
       </div>
     </div>
