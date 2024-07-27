@@ -14,14 +14,49 @@ function Dish({ dish }) {
     let prevCart = [...cart];
     console.log("prevCart", prevCart);
     console.log("dishToAdd", dishToAdd);
-    let findProdObj = prevCart.find((item) => item._id === dishToAdd._id);
+    let findProdObj = prevCart.find((item) => item.dish._id === dishToAdd.dish._id);
     console.log("findProdObj", findProdObj);
     if (findProdObj) findProdObj.quantity++;
-    else prevCart.push(dishToAdd);
+    else
+    {
+      if(prevCart.length)
+      {
+        console.log("prevCart[0].dish.resturantId",prevCart[0].dish.resturantId);
+        console.log("dishToAdd.dish.resturantId",dishToAdd.dish.resturantId);
+        if(prevCart[0].dish.resturantId !== dishToAdd.dish.resturantId)
+        {
+          const confirmed = window.confirm('Selected dish is from a different restaurant, do you want to reset previous selection?');
+          if(confirmed)
+          {
+            prevCart = [];
+            prevCart.push(dishToAdd);
+         
+          }
+          
+        }
+        else{
+          prevCart.push(dishToAdd);
+        }
+      }
+      else
+      {
+        prevCart.push(dishToAdd);
+      }
+      // if(dishToAdd.res)
+      
+  
+
+
+    }
+    
+   
      
     setCart(prevCart);
     localStorage.setItem('cart',JSON.stringify(prevCart));
     console.log("prevCart", prevCart);
+
+
+
   };
   return (
     <>
@@ -65,7 +100,7 @@ function Dish({ dish }) {
             <div className="absolute top-50 bottom-0 left-0 right-0 pt-[10px] text-center">
               <button
                 onClick={(e) => {
-                  addToCart({ _id: dish._id, quantity: 1 });
+                  addToCart({ dish, quantity: 1,  });
                 }}
                 type="button"
                 class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"

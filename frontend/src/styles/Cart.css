@@ -1,0 +1,11 @@
+.resturantImage{
+    width:120px;  /* Set a fixed width */
+  height: 90px; /* Set a fixed height */
+ 
+}
+.vegIcons{
+    width:15px;  /* Set a fixed width */
+  height:15px; /* Set a fixed height */
+  display: inline-block;
+ 
+}
