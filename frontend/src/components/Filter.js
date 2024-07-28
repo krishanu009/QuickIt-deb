@@ -156,7 +156,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
     // selectedFilters = tempSelectedFilters;
     setAvailableFilters(tempAvailableFilters);
 
-    console.log("tempAvailableFilters", tempAvailableFilters);
+    //console.log("tempAvailableFilters", tempAvailableFilters);
   };
 
   useEffect(() => {
@@ -174,7 +174,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
   };
   const handleFilterMenuSelection = (item) => {
     let findObj = filterMenues.find((element) => element.type === item.type);
-    console.log("find obj", findObj);
+    //console.log("find obj", findObj);
     if (!findObj) return;
 
     setSelectedFilterMenu(findObj);
@@ -227,18 +227,18 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
       }
     });
 
-    console.log("dis", tempDisplayFilters);
+    //console.log("dis", tempDisplayFilters);
     setDisplayFilters([...tempDisplayFilters]);
 
   }
   const handleApplyFilters = () => {
     setSelectedFilters(tempSelectedFilters);
-    console.log("applied filters",tempSelectedFilters);
+    //console.log("applied filters",tempSelectedFilters);
     setShowFilterMenu(false);
   };
 
   const removeFilter = (name) => {
-    console.log("here");
+    //console.log("here");
       
 
       let tempObj = {...tempSelectedFilters};
@@ -292,7 +292,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
                             checked={radioSelected === item.value}
                             onChange={(e) => {
                               setRadioSelected(e.target.value);
-                              console.log(e.target.value);
+                              //console.log(e.target.value);
                             }}
                           ></input>
                           <label for="html">{item.title}</label>
@@ -343,7 +343,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
         <div
           onClick={() => {
             setShowFilterMenu(true);
-            console.log("selected filter menu", selectedFilterMenu);
+            //console.log("selected filter menu", selectedFilterMenu);
           }}
           className="inline-block w-[130px] h-[45px] border-2 border-solid border-customHoverColor rounded-full shadow-lg text-center pt-2 text-[14px] flex cursor-pointer"
         >
@@ -417,7 +417,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
                     checked={radioSelected === "relevance"}
                     onChange={(e) => {
                       setRadioSelected(e.target.value);
-                      console.log(e.target.value);
+                      //console.log(e.target.value);
                     }}
                   ></input>
                   <label for="html">Relevance</label>
@@ -432,7 +432,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
                     checked={radioSelected === "delivery"}
                     onChange={(e) => {
                       setRadioSelected(e.target.value);
-                      console.log(e.target.value);
+                      //console.log(e.target.value);
                     }}
                   ></input>
                   <label for="html">Delivery time</label>
@@ -447,7 +447,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
                     checked={radioSelected === "rating"}
                     onChange={(e) => {
                       setRadioSelected(e.target.value);
-                      console.log(e.target.value);
+                     // console.log(e.target.value);
                     }}
                   ></input>
                   <label for="html">Ratings</label>
@@ -462,7 +462,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
                     checked={radioSelected === "costlowtohigh"}
                     onChange={(e) => {
                       setRadioSelected(e.target.value);
-                      console.log(e.target.value);
+                      //console.log(e.target.value);
                     }}
                   ></input>
                   <label for="html">Cost:LowToHigh</label>
@@ -477,7 +477,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
                     checked={radioSelected === "costhightolow"}
                     onChange={(e) => {
                       setRadioSelected(e.target.value);
-                      console.log(e.target.value);
+                      //console.log(e.target.value);
                     }}
                   ></input>
                   <label for="html">Cost:HighToLow</label>

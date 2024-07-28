@@ -46,7 +46,7 @@ function Home() {
       filteredProducts = [...allProduct];
     } else {
       const filterTagValues = displayFilters.map((tag) => tag.value);
-      console.log("filterTagValues", filterTagValues);
+      //console.log("filterTagValues", filterTagValues);
       filteredProducts = allProduct.filter((item) =>
         item.tags.some((tag) => filterTagValues.includes(tag))
       );
@@ -62,7 +62,7 @@ function Home() {
   };
 
   const sortByPrice = (data, type) => {
-    console.log("type", type);
+    //console.log("type", type);
     if (type === "costhightolow")
       return data.sort(
         (a, b) => parseFloat(b.maxPrice) - parseFloat(a.maxPrice)
@@ -92,7 +92,7 @@ function Home() {
     await axios
       .get(process.env.REACT_APP_GET_RESTURANT + "/banglore")
       .then((res) => {
-        console.log("res", res);
+        //console.log("res", res);
         setAllProduct(res.data);
       })
       .catch((e) => {

@@ -13,6 +13,7 @@ connectDb();
 app.use(express.json());
 app.use('/api/product', require("./routes/productRoutes"));
 app.use('/api/seller',require('./routes/sellerRoutes'));
+app.use('/api/user',require('./routes/userRoutes'));
 app.use('/api/resturant',require('./routes/resturantRoutes'));
 app.use(errorHandler);
 
