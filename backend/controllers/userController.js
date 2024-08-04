@@ -179,4 +179,57 @@ const currentUser = asyncHandler(async (req, res) => {
   res.status(200).json(req.user);
 });
 
-module.exports = {getAllUser,newUser,loginUser,currentUser,getUserById}
+//@desc update user
+//@route POST /api/user/update/:id
+//@access public
+
+
+
+const updateUser = asyncHandler(async (req,res) => {
+
+  if(!req.params.id)
+    {
+      res.status(400);
+        throw new Error("Error in updating product");
+    }
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+  
+    if(updatedUser)
+    {
+       res.status(200).json(updatedUser);
+    }
+    else
+    {
+      res.status(400);
+      throw new Error("Error in updating product");
+    }
+
+})
+
+//@desc add new address
+//@route POST /api/user/address/add
+//@access public
+const addAddress = async (req, res) => {
+  const { userId, newAddress } = req.body;
+
+  try {
+    console.log("hitting addAddress");
+      const user = await User.findById(userId);
+      
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Add new address to the address array
+      user.address.push(newAddress);
+      await user.save();
+
+      res.status(200).json(newAddress);
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+module.exports = {getAllUser,newUser,loginUser,currentUser,getUserById,updateUser,addAddress}

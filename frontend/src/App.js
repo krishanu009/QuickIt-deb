@@ -12,6 +12,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom"
+import CheckoutForm from "./components/CheckoutForm";
+import Search from "./components/Search";
 
 function App() {
   const [cart,setCart] = useState([]);
@@ -69,6 +71,8 @@ useEffect(()=>{
           <Route path="/cart" element={<Cart currentUser = {currentUser} setCurrentUser = {setCurrentUser}/>} />
           <Route path="/login" element={<Login currentUser = {currentUser} setCurrentUser = {setCurrentUser} getCurrentUser={getCurrentUser}></Login>} />
           <Route path="/register" element={<Register currentUser = {currentUser} setCurrentUser = {setCurrentUser} getCurrentUser={getCurrentUser}></Register>} />
+          <Route path="/checkout" element={<CheckoutForm></CheckoutForm>} />
+          <Route path="/search" element={<Search></Search>} />
         </Routes>
       </Router>
       </CartContext.Provider>

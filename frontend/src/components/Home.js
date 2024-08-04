@@ -100,7 +100,7 @@ function Home() {
       });
   };
   return (
-    <div className="pl-[10%] pr-[100px] pt-[20px] h-[1000px]">
+    <div className="px-32 md:px-10 lg:px-32 xl:px-20 pt-5 h-auto overflow-x-hidden">
       {/* <h1 className="text-3xl font-bold underline">
       Hello world!
     </h1> */}

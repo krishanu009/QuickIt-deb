@@ -4,6 +4,8 @@ import { CartContext } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Dropdown from "./Dropdown";
+import LocationDropdown from "./LocationDropdown.js"
+import logo from "../assets/logo.png";
 function Header({ currentUser, setCurrentUser, logOut }) {
   const { cart, setCart } = useContext(CartContext);
 
@@ -23,18 +25,20 @@ function Header({ currentUser, setCurrentUser, logOut }) {
   }, []);
 
   useEffect(() => {}, [currentUser]);
-  
+
   return (
     <div className="main z-10 bg-white h-[80px] w-full sticky top-0 shadow flex">
-      <div className="w-[30%] p-2 pl-20">
+      <div className="flex w-[30%] p-2 pl-32">
         {" "}
-        <Link to={`/`}>Home</Link>
+        <Link to={`/`}>
+          <img className="logo" src={logo}></img>
+        </Link>
+        <div className="pt-4 font-semibold text-gray-500 pl-16 hover:text-customHoverColor cursor-pointer">
+        <LocationDropdown></LocationDropdown>
+        </div>
       </div>
 
-      <div className="w-[70%] p-2 flex items-center">
-        <div className="font-semibold text-gray-500 ml-[20px] hover:text-customHoverColor cursor-pointer">
-          Section 2 Content
-        </div>
+      <div className="w-[70%] p-2 flex items-center space-x-32">
         <div className="ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +50,7 @@ function Header({ currentUser, setCurrentUser, logOut }) {
           >
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
           </svg>
-          &nbsp;&nbsp;&nbsp;Search
+          &nbsp;&nbsp;&nbsp;<Link to={`/search`}>Search</Link>
         </div>
 
         <div className="ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
@@ -65,7 +69,7 @@ function Header({ currentUser, setCurrentUser, logOut }) {
 
         <div className="ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
           {currentUser.email ? (
-           <Dropdown currentUser={currentUser} logOut = {logOut}></Dropdown>
+            <Dropdown currentUser={currentUser} logOut={logOut}></Dropdown>
           ) : (
             <Link to={"/register"}>
               <div className="flex items-center font-semibold">
@@ -85,28 +89,31 @@ function Header({ currentUser, setCurrentUser, logOut }) {
             </Link>
           )}
         </div>
-        <Link to={`/cart`}>
-          <div className="relative ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
-            {cart.length ? (
-              <div className="absolute right-[48px] w-[15px] h-[15px] bg-green-500 rounded-full">
-                <div className="text-[10px] text-white ml-[4px]">
-                  {cart.length}
-                </div>
+
+        <div className="relative pl-4 flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
+        <Link to={`/cart`}><div className="flex">
+
+          {cart.length ? (
+            <div className="absolute right-[48px] w-[15px] h-[15px] bg-green-500 rounded-full mt-1">
+              <div className="text-[10px] text-white ml-[4px]">
+                {cart.length}
               </div>
-            ) : null}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-basket3"
-              viewBox="0 0 16 16"
-            >
-              <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM3.394 15l-1.48-6h-.97l1.525 6.426a.75.75 0 0 0 .729.574h9.606a.75.75 0 0 0 .73-.574L15.056 9h-.972l-1.479 6z" />
-            </svg>
-            &nbsp;&nbsp;Cart
-          </div>
-        </Link>
+            </div>
+          ) : null}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-basket3 mt-1"
+            viewBox="0 0 16 16"
+          >
+            <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM3.394 15l-1.48-6h-.97l1.525 6.426a.75.75 0 0 0 .729.574h9.606a.75.75 0 0 0 .73-.574L15.056 9h-.972l-1.479 6z" />
+          </svg>
+          &nbsp;&nbsp;Cart
+          </div></Link>
+          
+        </div>
       </div>
 
       {/* <div className="w-[20%] p-2">
