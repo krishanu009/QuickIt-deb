@@ -1,0 +1,109 @@
+#map { height: 180px; }
+
+.App {
+  display: flex;
+  position:fixed;
+    text-align: center;
+    z-index: 0;
+    height: 50px;
+
+  }
+  
+  .App-logo {
+    height: 40vmin;
+    pointer-events: none;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  
+  .App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .App-link {
+    color: #61dafb;
+  }
+  
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .map-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  /* Make the map container fill the parent div */
+  .map-wrapper .leaflet-container {
+    height: 100%;
+    width: 100%;
+  }
+  
+  .leaflet-control-geosearch .reset {
+    font-size: 16px;
+    color: black;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: absolute; /* Position the button absolutely within the parent */
+    right: 10px; /* Adjust the position from the right edge of the parent */
+    top: 50%; /* Align it vertically centered */
+    transform: translateY(-50%); /* Correct the centering offset */
+    z-index: 1000;
+    display: inline;
+    visibility: visible;
+}
+
+.leaflet-control-geosearch input.glass {
+    padding-right: 30px; /* Add padding to the right to make room for the button */
+}
+
+.leaflet-control-geosearch form {
+  position: relative;
+}
+
+.leaflet-control-geosearch .reset {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000; /* Ensure it's on top of the input but below results */
+  display: inline;
+}
+
+.leaflet-control-geosearch .results {
+  position: absolute;
+  top: 100%; /* Position right below the input field */
+  left: 0;
+  right: 0;
+  margin-top: 5px; /* Add space between input and results */
+  z-index: 999; /* Slightly below the button */
+  background: white; /* Ensure dropdown background is opaque */
+  border: 1px solid #ccc; /* Add border if necessary */
+}
+
+.leaflet-control-geosearch input.glass {
+  padding-right: 30px; /* Make space for the reset button */
+}

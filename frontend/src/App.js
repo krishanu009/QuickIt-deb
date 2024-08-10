@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Resturant from "./components/Resturant";
 import Loader from "./components/Loader";
 import {CartContext} from './context/CartContext'
+import { LocationContext } from "./context/LocationContext";
 import { useEffect, useState } from "react";
 import Cart from "./components/Cart";
 import Login from "./components/Login";
@@ -13,11 +14,14 @@ import Register from "./components/Register";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom"
 import CheckoutForm from "./components/CheckoutForm";
+import Location from "./components/Location";
 import Search from "./components/Search";
 
 function App() {
   const [cart,setCart] = useState([]);
+  const [locationData,setLocationData] = useState([]);
   const value = {cart,setCart};
+  const locationContextValue = {locationData,setLocationData};
   const [currentUser, setCurrentUser] = useState({
     name:"",
     email:""
@@ -60,6 +64,7 @@ useEffect(()=>{
     // </div>
 
     <>
+    <LocationContext.Provider value={locationContextValue}>
     <CartContext.Provider value={value}>
       
       
@@ -73,9 +78,11 @@ useEffect(()=>{
           <Route path="/register" element={<Register currentUser = {currentUser} setCurrentUser = {setCurrentUser} getCurrentUser={getCurrentUser}></Register>} />
           <Route path="/checkout" element={<CheckoutForm></CheckoutForm>} />
           <Route path="/search" element={<Search></Search>} />
+          {/* <Route path="/location" element={<Location></Location>} /> */}
         </Routes>
       </Router>
       </CartContext.Provider>
+      </LocationContext.Provider>
     </>
    
   

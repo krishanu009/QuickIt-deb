@@ -24,7 +24,7 @@ function Login({currentUser,setCurrentUser,getCurrentUser}) {
       
       setIsSubmitting(true)
       setErrorText('');
-      console.log(process.env.REACT_APP_USER_LOGIN);
+      // console.log(process.env.REACT_APP_USER_LOGIN);
       axios.post(process.env.REACT_APP_USER_LOGIN, payload ).then((res)=>{
         setIsSubmitting(false);
         console.log("y",res.data);
