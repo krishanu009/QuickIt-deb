@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 function Search() {
   const [searchInput, setSearchInput] = useState("");
@@ -180,7 +180,10 @@ function Search() {
       veg: false,
     },
   ]);
-
+  useEffect(() => {
+    // Scroll to top on mount
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="overflow-y-auto h-full w-full px-[25%] py-[2%] space-x-8 pb-[5%]">
       <form className="relative w-[100%]">

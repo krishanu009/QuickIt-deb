@@ -54,7 +54,7 @@ function Product({ product }) {
               </svg>
             </div>
             <div className="font-semibold text-[rgb(65,68,73)] text3">
-              {product.rating.value} | 35 - 40 mins
+              {product.rating.value} 
             </div>
           </div>
           <div className="overflow-hidden text-ellipsis whitespace-nowrap text-[rgb(103,116,122)] text3">
@@ -65,7 +65,7 @@ function Product({ product }) {
           </div>
           <div className="overflow-hidden text-ellipsis whitespace-nowrap text-[rgb(103,116,122)] text3">
           {
-              product.location
+              product.address
           }
           </div>
         </div>

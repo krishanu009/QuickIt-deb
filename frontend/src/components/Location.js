@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import "../styles/location.css";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import * as GeoSearch from "leaflet-geosearch";
@@ -12,15 +12,16 @@ import {
 } from "react-leaflet";
 import { LocationContext } from "../context/LocationContext";
 
-const defaultCenter = [38.9072, -77.0369];
+const defaultCenter = [12.971599, 77.594566];
 const defaultZoom = 13;
 
-function Location({ selecCurrentLocation }) {
+function Location({ selecCurrentLocation,setSelectCurrentLocation, setLocationMenu }) {
   const [position, setPosition] = useState(null);
   const { locationData, setLocationData } = useContext(LocationContext);
+  const mapRef = useRef(null); // Create a ref for the map
 
   function AddSearchControl() {
-    const map = useMap(); // Correctly obtain the map instance
+    const map = useMap();
 
     useEffect(() => {
       const searchControl = new GeoSearch.GeoSearchControl({
@@ -29,40 +30,87 @@ function Location({ selecCurrentLocation }) {
       });
       map.addControl(searchControl);
 
-      // Cleanup on component unmount
       return () => map.removeControl(searchControl);
-    }, [map]); // Added map to dependency array
-
-    useEffect(() => {
-      if (selecCurrentLocation) {
-        const center = map.getCenter();
-        handleLocationChange(center.lat, center.lng);
-      }
-    }, [selecCurrentLocation, map]); // Added map to dependency array
+    }, [map]);
 
     return null;
   }
 
+  useEffect(() => {
+
+    console.log("location change useeffect");
+    if (selecCurrentLocation === "select" && mapRef.current) {
+      const center = mapRef.current.getCenter();
+      handleLocationChange(center.lat, center.lng);
+      
+    } else if (selecCurrentLocation === "clear" && mapRef.current) {
+      const specificLat = 12.971599;
+      const specificLng = 77.594566;
+      mapRef.current.setView([specificLat, specificLng], defaultZoom);
+
+      handleLocationChange(specificLat, specificLng);
+      
+    }
+    
+  }, [selecCurrentLocation]);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setPosition({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.log("Error getting geolocation", error);
+        }
+      );
+    } else {
+      console.log("Geolocation is not available in your browser.");
+    }
+  }, []);
+
+  // function LocationMarker() {
+  //   const map = useMapEvents({
+  //     click() {
+  //       map.locate();
+  //     },
+  //     locationfound(e) {
+  //       // setPosition(e.latlng);
+  //       // map.flyTo(e.latlng, map.getZoom());
+  //     },
+  //     moveend() {
+  //       const center = map.getCenter();
+  //       console.log(Map moved to: Latitude: ${center.lat}, Longitude: ${center.lng});
+  //       // getPlaceName(center.lat, center.lng);
+  //       // handleLocationChange(center.lat, center.lng);
+  //     },
+  //   });
+
+  //   return position === null ? null : (
+  //     <Marker position={position}>
+  //       <Popup>You are here</Popup>
+  //     </Marker>
+  //   );
+  // }
+
   function LocationMarker() {
     const map = useMapEvents({
-      click() {
-        map.locate();
-      },
-      locationfound(e) {
+      click(e) {
+        const { lat, lng } = e.latlng;
         setPosition(e.latlng);
+        console.log(`Clicked at: Latitude: ${lat}, Longitude: ${lng}`);
         map.flyTo(e.latlng, map.getZoom());
-      },
-      moveend() {
-        const center = map.getCenter();
-        console.log(`Map moved to: Latitude: ${center.lat}, Longitude: ${center.lng}`);
-        // getPlaceName(center.lat, center.lng);
-        // handleLocationChange(center.lat, center.lng);
+
+        // handleLocationChange(lat, lng);
       },
     });
 
     return position === null ? null : (
-      <Marker position={position}>
-        <Popup>You are here</Popup>
+      <Marker position={position} draggable={true}>
+        <Popup>
+          Latitude: {position.lat}, Longitude: {position.lng}
+        </Popup>
       </Marker>
     );
   }
@@ -83,24 +131,16 @@ function Location({ selecCurrentLocation }) {
     setLocationData({
       address: data?.address,
       displayName: data?.display_name,
+      lat: data?.lat,
+      lon: data?.lon
     });
+    setSelectCurrentLocation("default");
+    setLocationMenu(false);
+
+   
   };
 
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setPosition({ lat: latitude, lng: longitude });
-        },
-        (error) => {
-          console.log("Error getting geolocation", error);
-        }
-      );
-    } else {
-      console.log("Geolocation is not available in your browser.");
-    }
-  }, []);
+ 
 
   return (
     <div className="map-wrapper">
@@ -109,6 +149,7 @@ function Location({ selecCurrentLocation }) {
         zoom={defaultZoom}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
+        ref={mapRef}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

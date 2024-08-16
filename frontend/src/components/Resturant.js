@@ -8,6 +8,7 @@ import "../styles/Resturant.css";
 import deliveryIcon from "../assets/delivery.jpg";
 import spoon from "../assets/spoon-loader.webm"
 import {CartContext} from '../context/CartContext'
+import { LocationContext } from "../context/LocationContext";
 function Resturant() {
   const { id } = useParams();
   const [resturant, setResturant] = useState({
@@ -43,10 +44,13 @@ function Resturant() {
   const [checked, setChecked] = useState(null);
   const [veg, setVeg] = useState(false);
   const [nonVeg, setnonVeg] = useState(false);
+  const [deliveryTime, setDeliveryTime] = useState("");
+  const [deliveryDistance,setDeliveryDistance] = useState("");
+  const [deliveryCharge,setDeliveryCharge] = useState("");
+  const { locationData, setLocationData } = useContext(LocationContext);
  
-
-
   useEffect(()=>{
+    window.scrollTo(0, 0);
     getResturantDetails();
   },[]);
   useEffect(() => {
@@ -58,6 +62,35 @@ function Resturant() {
     filterDish();
   }, [veg, nonVeg]);
 
+  useEffect(() => {
+   getDistance();
+  },[resturant,locationData])
+  
+
+  const getDistance = async () => {
+    const payload = {
+      resturantLatLong: resturant.location,
+      userLatLong: locationData.lat + "," + locationData.lon
+    };
+     console.log("locationData",locationData);
+     console.log("payload",payload);
+    const queryParams = new URLSearchParams(payload).toString();
+    const url = `${process.env.REACT_APP_GET_DISTANCE}?${queryParams}`;
+    
+    try {
+      const res = await axios.get(url);
+      console.log("distance data", res.data);
+
+      setDeliveryTime(`${parseFloat(res.data.duration).toFixed(0)} min - ${parseFloat(res.data.duration + 10).toFixed(0)} min`)
+
+      setDeliveryDistance(parseFloat(res.data.distance).toFixed(2));
+
+      setDeliveryCharge(parseFloat(parseFloat(res.data.distance) * 10).toFixed(0));
+      // setResturant(res.data); // Uncomment if you need to set state
+    } catch (e) {
+      console.log("distance data err", e);
+    }
+  };
   
 const getResturantDetails = async () => {
   console.log("resturant  data");
@@ -119,9 +152,20 @@ await axios.get(process.env.REACT_APP_GET_RESTURANT_BY_ID + "/" + id).then((res)
       ? (parseFloat(resturant.rating.count) / 1000).toFixed(1) + "K"
       : parseFloat(resturant.rating.count);
   return (
-    <div className="pl-[25%] pr-[25%] pt-[20px] h-full ">
 
-      <div className="font-bold p-8 text-[30px]">{resturant.name}</div>
+   
+    <div className="pl-[22%] pr-[22%] pt-[20px] h-full bg-gray-200">
+
+{/* <div className="fixed top-0 left-8 h-full w-1/6 bg-white shadow-lg mt-[100px] rounded-2xl">
+        <div className="p-4">
+          <h2 className="text-xl font-bold">Left Sidebar</h2>
+        
+        </div>
+      </div> */}
+
+     <div className="bg-white p-8 rounded-2xl min-h-[100dvh] shadow-lg">
+
+     <div className="font-bold p-8 text-[30px]">{resturant.name}</div>
       <div class="rounded-2xl w-full h-[200px] bg-white p-4 border border-gray-300 shadow-lg">
         <div className="mt-[1px] flex space-x-1 pt-2">
           <div className="rounded-full w-[20px] h-[20px] inline-block pl-[2.5px] text-white bg-green-700 pt-[2px] mt-[2px] ">
@@ -160,11 +204,11 @@ await axios.get(process.env.REACT_APP_GET_RESTURANT_BY_ID + "/" + id).then((res)
             <div className="rounded-full w-[10px] h-[10px] pl-[2.5px] text-white bg-customHoverColor "></div>
           </div>
           <div>
-            <div className="mt-[-6px] pl-[4px] font-bold text-[13px] text-gray-500">
-              banglore
+            <div className="mt-[-6px] pl-[4px] font-bold text-[13px] text-gray-500 w-[90%] overflow-hidden truncate">
+              {resturant.address}
             </div>
-            <div className="mt-[13px] pl-[4px] font-bold text-[13px] text-gray-500">
-              25 -30 min
+            <div className="mt-[13px] pl-[4px] font-bold text-[13px] text-gray-500 ">
+              {deliveryTime}
             </div>
           </div>
         </div>
@@ -172,7 +216,7 @@ await axios.get(process.env.REACT_APP_GET_RESTURANT_BY_ID + "/" + id).then((res)
         <div className="text-grey-700  flex">
           <img className="deliveryIcons" src={deliveryIcon} alt="delivery" />
           <div className="ml-[5px] text-[13px] text-gray-500 font-semibold">
-            4.2 kms | ₹59 Delivery fee will apply
+            {`${deliveryDistance}Km`} | ₹{deliveryCharge} Delivery fee will apply
           </div>
         </div>
       </div>
@@ -227,6 +271,9 @@ await axios.get(process.env.REACT_APP_GET_RESTURANT_BY_ID + "/" + id).then((res)
       {filteredDish.map((dish) => (
         <Dish dish={dish} ></Dish>
       ))}
+      
+     </div>
+      
     </div>
   );
 }

@@ -1,10 +1,14 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import "../styles/Filter.css";
 
-function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelected}) {
-
+function Filter({
+  displayFilters,
+  setDisplayFilters,
+  radioSelected,
+  setRadioSelected,
+}) {
   const [sortBy, setSortBy] = useState({ text: "Sort by" });
- 
+
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -72,6 +76,13 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
     { type: "deliverytime", name: "Fast Delivery" },
     { type: "cusines", name: "Cusines" },
     { type: "explore", name: "Explore" },
+  ];
+
+  const recommendedFilters = [
+    { title: "Biriyani", value: "biriyani", checked: false },
+    { title: "Burger", value: "burger", checked: false },
+    { title: "Cakes & Pasteries", value: "cakes", checked: false },
+    { title: "Chinese", value: "chinese", checked: false },
   ];
   // const filterMenues = [
   //   {
@@ -161,8 +172,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
 
   useEffect(() => {
     updateDisplayFilters();
-  },[selectedFilters]);
-
+  }, [selectedFilters]);
 
   const resetSelectedFilterObject = () => {
     let tempOBJ = { ...tempSelectedFilters };
@@ -179,6 +189,21 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
 
     setSelectedFilterMenu(findObj);
   };
+
+  const handleRecommededFilterChange = (value) => {
+
+    let newtempSelectedFilters = {...tempSelectedFilters};
+
+    newtempSelectedFilters[value] = true;
+
+    setTempSelectedFilters({
+      ...tempSelectedFilters,
+      [value]: true,
+    });
+
+   setSelectedFilters(newtempSelectedFilters);
+
+  }
 
   const handleFilterSelection = (event, filterMenuType) => {
     // console.log(event.target);
@@ -218,7 +243,6 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
     setShowFilterMenu(false);
   };
   const updateDisplayFilters = () => {
-
     let tempDisplayFilters = [];
 
     availableFilters.forEach((el) => {
@@ -229,8 +253,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
 
     //console.log("dis", tempDisplayFilters);
     setDisplayFilters([...tempDisplayFilters]);
-
-  }
+  };
   const handleApplyFilters = () => {
     setSelectedFilters(tempSelectedFilters);
     //console.log("applied filters",tempSelectedFilters);
@@ -239,15 +262,13 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
 
   const removeFilter = (name) => {
     //console.log("here");
-      
 
-      let tempObj = {...tempSelectedFilters};
-      tempObj[name] = false;
-      setTempSelectedFilters(tempObj);
+    let tempObj = { ...tempSelectedFilters };
+    tempObj[name] = false;
+    setTempSelectedFilters(tempObj);
 
-      setSelectedFilters(tempObj);
-
-  }
+    setSelectedFilters(tempObj);
+  };
   return (
     <>
       {/* filter menu */}
@@ -347,12 +368,13 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
           }}
           className="inline-block w-[130px] h-[45px] border-2 border-solid border-customHoverColor rounded-full shadow-lg text-center pt-2 text-[14px] flex cursor-pointer"
         >
-          {displayFilters.length?  <div className="rounded-full bg-customHoverColor w-[20px] h-[20px] inline-block mr-2 ml-3 mt-[1px] text-white">
-            {displayFilters.length}
-          </div>:<div className=" w-[20px] h-[20px] inline-block mr-2 ml-3 mt-[1px] text-white">
-            
-          </div> }
-         
+          {displayFilters.length ? (
+            <div className="rounded-full bg-customHoverColor w-[20px] h-[20px] inline-block mr-2 ml-3 mt-[1px] text-white">
+              {displayFilters.length}
+            </div>
+          ) : (
+            <div className=" w-[20px] h-[20px] inline-block mr-2 ml-3 mt-[1px] text-white"></div>
+          )}
           Filter
           <div className="ml-2">
             <svg
@@ -381,7 +403,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
     </div> */}
         {/* sort by */}
         <div
-          className="inline-block w-[100px] h-[45px] border-2 border-solid border-customHoverColor rounded-full shadow-lg text-center pt-2 pl-5 text-[14px] flex cursor-pointer"
+          className="relative w-[100px] h-[45px] border-2 border-solid border-customHoverColor rounded-full shadow-lg text-center pt-2 pl-5 text-[14px] flex cursor-pointer"
           onClick={() => setShowSortMenu(true)}
         >
           {sortBy.text}
@@ -447,7 +469,7 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
                     checked={radioSelected === "rating"}
                     onChange={(e) => {
                       setRadioSelected(e.target.value);
-                     // console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
                   ></input>
                   <label for="html">Ratings</label>
@@ -491,31 +513,45 @@ function Filter({displayFilters, setDisplayFilters, radioSelected, setRadioSelec
         {/* sort by */}
 
         {/* filter chips */}
-
-        {displayFilters.map((item) => (
-          <div
-            className="inline-block min-w-[100px] w-auto h-[45px] border-2 border-solid rounded-full shadow-lg text-center pt-2 pl-5 text-[14px] flex cursor-pointer"
-            
-          >
-            {item.title}
-            <div className="ml-1 pt-1" onClick={() => removeFilter(item.value)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 34 34"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
+        
+          {displayFilters.map((item) => (
+            <div className="inline-block min-w-[100px] w-auto h-[45px] border-2 border-solid rounded-full shadow-lg text-center pt-2 pl-5 text-[14px] flex cursor-pointer">
+              {item.title}
+              <div
+                className="ml-1 pt-1"
+                onClick={() => removeFilter(item.value)}
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 34 34"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        
+         {recommendedFilters.map((item) => (
+  selectedFilters[item.value] !== true ? (
+    <div 
+      onClick={(e) => handleRecommededFilterChange(item.value)} 
+      className="text-gray-500 border-2 border-solid border-gray-300 bg-gray-200 inline-block min-w-[100px] w-auto h-[45px] rounded-full text-center pt-2 pl-5 pr-4 text-[14px] flex cursor-pointer"
+    >
+      {item.title}
+    </div>
+  ) : null
+))}
+        
+
+        <div></div>
 
         {/* filter chips */}
       </div>

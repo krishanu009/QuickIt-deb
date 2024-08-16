@@ -3,10 +3,12 @@
     height: 220px;
     background-color: white;
     position: absolute;
-    left: 290px;
-    top:460px;
+    left: 70%;
+    /* transform: translateX(-50%); */
+    top: 66%;
     text-align: justify;
     padding: 20px;
+    z-index: 30;
     
 }
 .filterMenu

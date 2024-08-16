@@ -6,6 +6,7 @@ import CartProduct from "./CartProduct";
 import { CartContext } from "../context/CartContext";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { LocationContext } from "../context/LocationContext";
 function Cart({ currentUser, setCurrentUser }) {
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ function Cart({ currentUser, setCurrentUser }) {
   const [cartProducts, setCartProducts] = useState([{}]);
   const [userInfo, setUserInfo] = useState({});
   const [total, setTotal] = useState(0);
-  const [delivery, setDelivery] = useState(43);
+  const [delivery, setDelivery] = useState("");
   const [allDeliveryAddress, setAllDeliveryAddress] = useState([]);
   const [selectedDeliveryAddress, setSelectedDeliveryAddress] = useState(null);
   const [contactLessDelivery, setContactLessDelivery] = useState(false);
@@ -64,6 +65,8 @@ function Cart({ currentUser, setCurrentUser }) {
     pin: "",
     _id: "",
   });
+
+  const { locationData, setLocationData } = useContext(LocationContext);
   const newFormRef = useRef(null);
   useEffect(() => {
     getRestaurant();
@@ -98,6 +101,35 @@ function Cart({ currentUser, setCurrentUser }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(()=>{
+    getDistance();
+  },[restaurant])
+
+
+  const getDistance = async () => {
+    const payload = {
+      resturantLatLong: restaurant.location,
+      userLatLong: locationData.lat + "," + locationData.lon
+    };
+     console.log("locationData",locationData);
+     console.log("payload",payload);
+    const queryParams = new URLSearchParams(payload).toString();
+    const url = `${process.env.REACT_APP_GET_DISTANCE}?${queryParams}`;
+    
+    try {
+      const res = await axios.get(url);
+      console.log("distance data", res.data);
+
+
+
+      setDelivery(parseFloat(parseFloat(res.data.distance) * 10).toFixed(0));
+      // setResturant(res.data); // Uncomment if you need to set state
+    } catch (e) {
+      console.log("distance data err", e);
+    }
+  };
+
 
   const getUserById = async () => {
     let userId = currentUser.id;

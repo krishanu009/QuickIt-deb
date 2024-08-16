@@ -12,18 +12,54 @@ import Location from "./Location.js";
 function Header({ currentUser, setCurrentUser, logOut }) {
   const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
-  
+
   const { locationData, setLocationData } = useContext(LocationContext);
-  
+
   const [selectedLocation, setSelectedLocation] = useState("bangalore");
   const [locationMenu, setLocationMenu] = useState();
-  const [selecCurrentLocation,setSelectCurrentLocation] = useState(false);
+  const [selecCurrentLocation, setSelectCurrentLocation] = useState(false);
   const filterMenuRef = useRef(null);
   // const [currentUser,setCurrentUser] = useState({
   //   name:"",
   //   email:"",
   //   phone:""
   // });
+
+  const defaultAddressData = {
+    "place_id": 219869732,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+    "osm_type": "way",
+    "osm_id": 38773287,
+    "lat": "12.97033725",
+    "lon": "77.59508413268529",
+    "class": "amenity",
+    "type": "school",
+    "place_rank": 30,
+    "importance": 0.3761097783818323,
+    "addresstype": "amenity",
+    "name": "St. Joseph's Indian High School",
+    "display_name": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Shanthala Nagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India",
+    "address": {
+      "amenity": "St. Joseph's Indian High School",
+      "road": "Vittal Mallya Road",
+      "neighbourhood": "D'Souza Layout",
+      "suburb": "Shanthala Nagar",
+      "city": "Bengaluru",
+      "county": "Bangalore North",
+      "state_district": "Bengaluru Urban",
+      "state": "Karnataka",
+      "ISO3166-2-lvl4": "IN-KA",
+      "postcode": "560001",
+      "country": "India",
+      "country_code": "in"
+    },
+    "boundingbox": [
+      "12.9684987",
+      "12.9718082",
+      "77.5942657",
+      "77.5959810"
+    ]
+  }
   useEffect(() => {
     let storedCart = localStorage.getItem("cart");
     console.log("storedCart", JSON.parse(storedCart));
@@ -31,6 +67,14 @@ function Header({ currentUser, setCurrentUser, logOut }) {
 
     const token = localStorage.getItem("token");
     console.log("token", token);
+      
+
+    setLocationData({
+      address: defaultAddressData?.address,
+      displayName: defaultAddressData?.display_name,
+      lat: defaultAddressData?.lat,
+      lon:defaultAddressData?.lon
+    });
     // getCurrentUser();
   }, []);
 
@@ -40,19 +84,20 @@ function Header({ currentUser, setCurrentUser, logOut }) {
 
     console.log("locationData.displayName", locationData);
   }, [locationData]);
-  const handleLocationChange = () => {
-    // setSelectedLocation("");
-    // navigate("/location");
-   setSelectCurrentLocation(true);
-
-  };
+  // const handleLocationChange = () => {
+  //   // setSelectedLocation("");
+  //   // navigate("/location");
+  //   setSelectCurrentLocation(true);
+  // };
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (filterMenuRef.current && !filterMenuRef.current.contains(event.target)) {
+      if (
+        filterMenuRef.current &&
+        !filterMenuRef.current.contains(event.target)
+      ) {
         setLocationMenu(false);
       }
-      
     }
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -64,35 +109,40 @@ function Header({ currentUser, setCurrentUser, logOut }) {
   return (
     <>
       {/* location menu */}
-{locationMenu && <div className="filterMenuBg fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div
-          ref={filterMenuRef}
-          className="filterMenu rounded-2xl shadow-lg border-2 border-solid p-4 cursor-pointer"
-        >
-          <div className="w-full h-[85%]  bg-red-500 relative">
-            <Location selecCurrentLocation = {selecCurrentLocation}></Location>
-          </div>
+      {locationMenu && (
+        <div className="filterMenuBg fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div
+            ref={filterMenuRef}
+            className="filterMenu rounded-2xl shadow-lg border-2 border-solid p-4 cursor-pointer"
+          >
+            <div className="w-full h-[85%]  bg-red-500 relative">
+              <Location selecCurrentLocation={selecCurrentLocation} setLocationMenu = {setLocationMenu} setSelectCurrentLocation={setSelectCurrentLocation}></Location>
+            </div>
 
-          <div className="p-[8px] font-bold text-gray-700 text-[25px] float-right">
-            <button
-            
-              type="button"
-              class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-            >
-              Clear
-            </button>
-            <button
+            <div className="p-[8px] font-bold text-gray-700 text-[25px] float-right">
+              <button
 
-             onClick={(e) => {handleLocationChange("select")}}
-              type="button"
-              class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-            >
-              Select
-            </button>
+              onClick={(e) => {
+                    setSelectCurrentLocation("clear");
+              }}
+                type="button"
+                class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              >
+                Clear
+              </button>
+              <button
+                onClick={(e) => {
+                 setSelectCurrentLocation("select");
+                }}
+                type="button"
+                class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
+              >
+                Select
+              </button>
+            </div>
           </div>
         </div>
-      </div>}
-      
+      )}
 
       {/* location menu */}
 
@@ -116,23 +166,23 @@ function Header({ currentUser, setCurrentUser, logOut }) {
             {/* <LocationDropdown></LocationDropdown> */}
 
             <div className="flex p-2 ">
-                <div className="">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-geo-alt-fill"
-                    viewBox="0 0 16 16"
-                    className="m-1"
-                  >
-                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-                  </svg>
-                </div>
-                <div className="w-64 overflow-hidden truncate">
-                  {selectedLocation}
-                </div>
+              <div className="">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-geo-alt-fill"
+                  viewBox="0 0 16 16"
+                  className="m-1"
+                >
+                  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                </svg>
               </div>
+              <div className="w-64 overflow-hidden truncate">
+                {selectedLocation}
+              </div>
+            </div>
           </div>
         </div>
 

@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const Resturant = require("../models/resturantModels");
 const Seller = require("../models/sellerModel");
 const imageHelper = require("../helper functions/imageUpload");
-
+const {getPlaceName,getDistance,haversineDistance} = require("../helper functions/locationEngine");
 //@desc get resturant
 //@route GET /api/resturant
 //@access public
@@ -32,20 +32,79 @@ const getResturantById = asyncHandler(async (req,res) => {
   console.log("resturant",resturant);
   res.status(200).json(resturant);
   });
-  
+
+
+  //@desc get distance
+//@route GET /current/distance
+//@access public
+
+const getResturantDistance = asyncHandler(async (req, res) => {
+  // Extract query parameters from req.query
+  const { resturantLatLong, userLatLong } = req.query;
+
+  if (!resturantLatLong || !userLatLong) {
+    res.status(400);
+    throw new Error("Please enter all details");
+  }
+
+  try {
+    let resultObj = await getDistance(resturantLatLong, userLatLong);
+    console.log("resultObj", resultObj);
+    if (resultObj) {
+      res.status(200).json(resultObj);
+    } else {
+      res.status(400);
+      throw new Error("Error occurred");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 //@desc get resturant
 //@route GET /api/resturant/:ocation
 //@access public
 
+// const getResturantByLocation = asyncHandler(async (req,res) => {
+
+//   let {location} = req.params;
+//   let resturants = await Resturant.find({location});
+   
+//   res.status(200).json(resturants);
+//   });
+
 const getResturantByLocation = asyncHandler(async (req,res) => {
 
   let {location} = req.params;
-  let resturants = await Resturant.find({location});
+  // let resturants = await Resturant.find({location});
 
+  location = location.split(",");
+  const userLat = parseFloat(location[0]);
+  const userLng = parseFloat(location[1]);
+
+  if(!userLat || !userLng)
+  {
+    res.status(400);
+    throw new Error("Please provide lat lang in right format");
+  }
+
+  try {
+    const restaurants = await Resturant.find();
+    const nearbyRestaurants = restaurants.filter(restaurant => {
+      const [resLat, resLng] = restaurant.location.split(',').map(Number);
+      const distance = haversineDistance(userLat, userLng, resLat, resLng);
+      return distance <= 100;
+    });
+
+    res.status(200).json(nearbyRestaurants);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  
+   
   res.status(200).json(resturants);
   });
-
 
 
 
@@ -146,4 +205,7 @@ if(!req.params.id)
  
 });
 
-module.exports = {allResturant,newResturant,getResturantByLocation,updateResturant, getResturantById};
+
+
+
+module.exports = {allResturant,newResturant,getResturantByLocation,updateResturant, getResturantById, getResturantDistance};
