@@ -28,9 +28,9 @@ const getProductByResturantId = asyncHandler(async (req, res) => {
 //@access public
 
 const newProduct = asyncHandler(async (req, res) => {
-  const { name, image, price, sellingPrice, resturantId, tags, veg, description, quantity  } = req.body;
+  const { name, image, price, sellingPrice, resturantId, tags, veg, description, quantity, rating  } = req.body;
   console.log("req body", req.body);
-  if (!name || !image || !price || !sellingPrice || !resturantId ||!veg || !description || !quantity ) {
+  if (!name || !image || !price || !sellingPrice || !resturantId || !description || !quantity ) {
     res.status(400);
     throw new Error("Please enter the mandatory fields!");
   }
@@ -71,7 +71,8 @@ const newProduct = asyncHandler(async (req, res) => {
       sellerId: id,
       veg,
       description,
-      quantity
+      quantity,
+      rating
     });
 
     if (product) {

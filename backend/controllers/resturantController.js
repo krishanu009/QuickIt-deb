@@ -205,7 +205,48 @@ if(!req.params.id)
  
 });
 
+//@desc search resturant
+//@route GET /api/resturant/search/byLocation/:location/:searchQuery
+//@access public
+const searchRestaurantByName = async (req, res) => {
+  try {
+    console.log("here searchRestaurantByName");
+
+    const location = req.params.location.split(",");
+    const userLat = parseFloat(location[0]);
+    const userLng = parseFloat(location[1]);
+    const { searchQuery } = req.params;
+
+    // Find restaurants where the name contains the search query (case-insensitive)
+    const regex = new RegExp(searchQuery, 'i');
+
+    // Search for restaurants where the name matches or the tags array contains the substring
+    const restaurants = await Resturant.find({
+      $or: [
+        { name: regex },
+        { tags: { $in: [regex] } }
+      ]
+    });
+
+    if (restaurants.length === 0) {
+      return res.status(404).json({ message: 'No restaurants found' });
+    }
+
+    // Filter restaurants within a 100km radius
+    const nearbyRestaurants = restaurants.filter(restaurant => {
+      const [resLat, resLng] = restaurant.location.split(',').map(Number);
+      const distance = haversineDistance(userLat, userLng, resLat, resLng);
+      return distance <= 100;
+    });
+
+    res.status(200).json(nearbyRestaurants);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
 
 
 
-module.exports = {allResturant,newResturant,getResturantByLocation,updateResturant, getResturantById, getResturantDistance};
+
+module.exports = {allResturant,newResturant,getResturantByLocation,updateResturant, getResturantById, getResturantDistance, searchRestaurantByName};

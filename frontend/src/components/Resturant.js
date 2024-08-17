@@ -16,11 +16,11 @@ function Resturant() {
       "count": "1586",
       "value": "4.3"
     },
-    "_id": "6694282655f25efab3999378",
-    "name": "Biriyani Spot",
-    "location": "banglore",
-    "sellerId": "668a7dc4960c1892de11f5fb",
-    "address": "banglore",
+    "_id": "",
+    "name": "",
+    "location": "",
+    "sellerId": "",
+    "address": "",
     "timing": [
       {
         "day": "1",
@@ -31,13 +31,13 @@ function Resturant() {
     ],
     "days": [],
     "offer": "Items at ₹199",
-    "image": "https://i.ibb.co/rbVct82/1720985636146-adktghqnlzmsq6rcgg2msr.jpg",
+    "image": "",
     "__v": 0,
     "tags": [
       "biriyani"
     ],
-    "maxPrice": "600",
-    "minPrice": "299"
+    "maxPrice": "",
+    "minPrice": ""
   });
   const [allDish, setAllDish] = useState([]);
   const [filteredDish, setFilteredDish] = useState([]);

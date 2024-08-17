@@ -77,7 +77,7 @@ useEffect(()=>{
           <Route path="/login" element={<Login currentUser = {currentUser} setCurrentUser = {setCurrentUser} getCurrentUser={getCurrentUser}></Login>} />
           <Route path="/register" element={<Register currentUser = {currentUser} setCurrentUser = {setCurrentUser} getCurrentUser={getCurrentUser}></Register>} />
           <Route path="/checkout" element={<CheckoutForm></CheckoutForm>} />
-          <Route path="/search" element={<Search></Search>} />
+          <Route path="/search/:food" element={<Search></Search>} />
           {/* <Route path="/location" element={<Location></Location>} /> */}
         </Routes>
       </Router>
